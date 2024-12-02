@@ -1,4 +1,6 @@
 ###
+### for quick testing: rebuild, copy and activate with
+### make -f /usr/share/selinux/devel/Makefile && scp thruk_42.pp <host>: && ssh <host> "semodule -i thruk_42.pp"
 ###
 
 policy_module(thruk_42, 0.0.1)
@@ -17,15 +19,23 @@ files_type(thruk_var_lib_t)
 
 require {
   type httpd_t;
+  type logrotate_t;
+  type var_t;
 }
 
 allow httpd_t thruk_etc_t:dir list_dir_perms;
 allow httpd_t thruk_etc_t:file { read_file_perms map };
 allow httpd_t thruk_etc_t:lnk_file read_lnk_file_perms;
 
-# collected from audit2allow
+
+## collected from audit2allow
+#============= httpd_t ==============
 allow httpd_t thruk_cache_t:dir { add_name remove_name setattr write };
 allow httpd_t thruk_cache_t:file { append create getattr ioctl lock open read rename setattr unlink write };
 allow httpd_t thruk_log_t:file { append getattr ioctl open };
 allow httpd_t thruk_var_lib_t:dir { add_name create read remove_name setattr write };
 allow httpd_t thruk_var_lib_t:file { append create getattr ioctl lock open read rename setattr unlink write };
+
+#============= logrotate_t ==============
+allow logrotate_t thruk_log_t:file getattr;
+allow logrotate_t var_t:dir read;
