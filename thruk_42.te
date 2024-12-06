@@ -20,22 +20,32 @@ files_type(thruk_var_lib_t)
 require {
   type httpd_t;
   type logrotate_t;
-  type var_t;
+  type systemd_timedated_t;
+  type shadow_t;
+  class file { getattr open read };
+  class dir { create read };
+  class dbus send_msg;
 }
+
 
 allow httpd_t thruk_etc_t:dir list_dir_perms;
 allow httpd_t thruk_etc_t:file { read_file_perms map };
 allow httpd_t thruk_etc_t:lnk_file read_lnk_file_perms;
 
 
-## collected from audit2allow
+## collected from audit2allow and normalized so all thruk_* with the same rights
 #============= httpd_t ==============
-allow httpd_t thruk_cache_t:dir { add_name remove_name setattr write };
-allow httpd_t thruk_cache_t:file { append create getattr ioctl lock open read rename setattr unlink write };
-allow httpd_t thruk_log_t:file { append getattr ioctl open };
-allow httpd_t thruk_var_lib_t:dir { add_name create read remove_name setattr write };
+allow httpd_t thruk_cache_t:dir    { add_name create read remove_name setattr write };
+allow httpd_t thruk_log_t:dir      { add_name create read remove_name setattr write };
+allow httpd_t thruk_var_lib_t:dir  { add_name create read remove_name setattr write };
+allow httpd_t thruk_cache_t:file   { append create getattr ioctl lock open read rename setattr unlink write };
+allow httpd_t thruk_log_t:file     { append create getattr ioctl lock open read rename setattr unlink write };
 allow httpd_t thruk_var_lib_t:file { append create getattr ioctl lock open read rename setattr unlink write };
+# not sure about this one
+allow httpd_t systemd_timedated_t:dbus send_msg;
+# nobody except root is allowed to read shadow, so shutup
+dontaudit httpd_t shadow_t:file { getattr open read };
 
 #============= logrotate_t ==============
 allow logrotate_t thruk_log_t:file getattr;
-allow logrotate_t var_t:dir read;
+allow logrotate_t thruk_cache_t:dir read;
