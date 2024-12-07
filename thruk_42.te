@@ -37,7 +37,7 @@ allow httpd_t thruk_etc_t:lnk_file read_lnk_file_perms;
 #============= httpd_t ==============
 allow httpd_t thruk_cache_t:dir    { add_name create read remove_name setattr write };
 allow httpd_t thruk_log_t:dir      { add_name create read remove_name setattr write };
-allow httpd_t thruk_var_lib_t:dir  { add_name create read remove_name setattr write };
+allow httpd_t thruk_var_lib_t:dir  { add_name create read remove_name setattr write rmdir };
 allow httpd_t thruk_cache_t:file   { append create getattr ioctl lock open read rename setattr unlink write };
 allow httpd_t thruk_log_t:file     { append create getattr ioctl lock open read rename setattr unlink write };
 allow httpd_t thruk_var_lib_t:file { append create getattr ioctl lock open read rename setattr unlink write };
