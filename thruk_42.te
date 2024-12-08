@@ -3,7 +3,7 @@
 ### make -f /usr/share/selinux/devel/Makefile && scp thruk_42.pp <host>: && ssh <host> "semodule -i thruk_42.pp"
 ###
 
-policy_module(thruk_42, 0.0.1)
+policy_module(thruk_42, 0.0.3)
 
 type thruk_etc_t;
 files_type(thruk_etc_t)
@@ -47,5 +47,6 @@ allow httpd_t systemd_timedated_t:dbus send_msg;
 dontaudit httpd_t shadow_t:file { getattr open read };
 
 #============= logrotate_t ==============
-allow logrotate_t thruk_log_t:file getattr;
+allow logrotate_t thruk_log_t:dir { add_name read remove_name write };
+allow logrotate_t thruk_log_t:file { create getattr open read rename setattr write };
 allow logrotate_t thruk_cache_t:dir read;
