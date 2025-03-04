@@ -3,7 +3,7 @@
 ### make -f /usr/share/selinux/devel/Makefile && scp thruk_42.pp <host>: && ssh <host> "semodule -i thruk_42.pp"
 ###
 
-policy_module(thruk_42, 0.0.3)
+policy_module(thruk_42, 0.0.4)
 
 type thruk_etc_t;
 files_type(thruk_etc_t)
